@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOCKET.IO CHAT</title>
+</head>
+<body>
+    <div>
+        <label for="room">Room:</label>
+        <input id="room" autocomplete="off" placeholder="name of room" />
+        <button id="join">Join Room</button>
+    </div>
+
+   <form action="">
+    <input id="msg" autocomplete="off" placeholder="your message" />
+    <button>send</button>
+   </form>
+   <button id="retourner">retunr to the general chat </button>
+   <hr>
+   <div id="messages">
+   </div>
+   <div id="roommessages">
+   </div>
+   <script src="/socket.io/socket.io.js"></script>
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+   <script>
+       $(function (){
+          $('#retourner').css('display', 'none');
+          var socket = io("http://localhost:5000");
+          var currentRoom = 'http://localhost:5000';
+          $('#roommessages').css('display', 'none');
+          $('#messages').css('display', 'block');
+
+          $('#join').click(function () {
+            $('#retourner').css('display', 'block');
+    currentRoom = $('#room').val();
+    if (!currentRoom || (currentRoom !== 'musique' && currentRoom !== 'jeux')) {
+       
+        alert('Room not found');
+    } else {
+     
+        $('#roommessages').css('display', 'block');
+        $('#messages').css('display', 'none');
+        $('#roommessages').empty().append($('<div>').text(`Joined room: ${currentRoom}`));
+    }
+});
+$('#retourner').click(function(){
+    $('#roommessages').css('display', 'none');
+    $('#messages').css('display', 'block');
+    $('#retourner').css('display', 'none');
+
+})
+ $('form').submit(function(e) {
+    e.preventDefault();
+    if ($('#messages').css('display') === 'block') {
+        socket.emit('chat message', $('#msg').val());
+        $('#msg').val('');
+        return false;
+    } else{
+        if ($('#roommessages').css('display') === 'block') {
+        socket.emit('message', $('#msg').val());
+        $('#msg').val('');
+    } 
+    } 
+    return false;
+});
+
+          socket.on('chat message', function(msg){
+              $('#messages').append($('<div>').text(msg));
+          });
+
+          socket.on('message', function (msg) {
+            $('#roommessages').append($('<div>').text(msg));
+       });
+    });
+    </script>
+</body>
+</html>
