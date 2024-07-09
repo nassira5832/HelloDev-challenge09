@@ -22,6 +22,7 @@ router.post("/register", async function (req, res) {
         if (user) {
             res.status(400).json(`User Already Regitered`);
             console.error(`User Already Regitered`);
+            return;
         }
 
         const hashedPasswd = await hashUtil.hashPasswd(passwd);
@@ -56,6 +57,7 @@ router.post("/login", async function (req, res) {
         if (!user) {
             res.status(400).json(`Invalid User`);
             console.error(`!user`);
+            return;
         }
 
         const isValidPasswd = await hashUtil.comparePasswd(
@@ -66,6 +68,7 @@ router.post("/login", async function (req, res) {
         if (!isValidPasswd) {
             res.status(400).json(`Invalid pseudo or passwd`);
             console.error(`user.passwd !== passwd`);
+            return;
         }
 
         const userToken = jwtUtil.generateToken(user._id);

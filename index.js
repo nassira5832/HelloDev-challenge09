@@ -30,11 +30,11 @@ app.use("/auth", authRouter);
 
 app.use(authMiddleware);
 
-// //! test
-// app.get("/info/me", function (req, res) {
-//     res.json(req.user);
-// });
-// //!
+//! test
+app.get("/info/me", function (req, res) {
+    res.json(`id:${req.user._id}, pseudo:${req.user.pseudo}`);
+});
+//!
 
 io.on('connection', (socket) => {
     console.log('Un utilisateur s\'est connecté.');

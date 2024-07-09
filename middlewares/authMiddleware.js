@@ -28,6 +28,7 @@ async function authMiddleware(req, res, next) {
         }
 
         req.user = user;
+        // console.log(req.user.pseudo, req.user._id);
         next();
     } catch (error) {
         res.status(500).json(`Error in Authentification`);
